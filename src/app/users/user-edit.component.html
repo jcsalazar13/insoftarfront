@@ -1,0 +1,61 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="listForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col">
+          <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.firstname }">
+            <label class="control-label">Firstname</label>
+            <input type="text" class="form-control" formControlName="firstname" required />
+            <small class="form-control-feedback"> {{ displayMessage.firstname }} </small>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.lastname }">
+            <label class="control-label">Lastname</label>
+            <input type="text" class="form-control" formControlName="lastname" required />
+            <small class="form-control-feedback"> {{ displayMessage.lastname }} </small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.email }">
+            <label class="control-label">Correo electrónico</label>
+            <input type="text" class="form-control" formControlName="email" required />
+            <small class="form-control-feedback"> {{ displayMessage.email }} </small>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.cemail }">
+            <label class="control-label">Confirmación de correo electrónico</label>
+            <input type="text" class="form-control" formControlName="cemail" required />
+            <small class="form-control-feedback"> {{ displayMessage.cemail }} </small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.document }">
+            <label class="control-label">Document</label>
+            <input type="text" class="form-control" formControlName="document" required />
+            <small class="form-control-feedback"> {{ displayMessage.document }} </small>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.phone }">
+            <label class="control-label">Phone</label>
+            <input type="text" class="form-control" formControlName="phone"/>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pull-right">
+        <button class="btn btn-danger m-l-5" (click)="goBack()">
+            <i class="fa fa-window-close-o"></i>Cancelar</button>
+        <button class="btn btn-info m-l-5" type="submit" [disabled]="listForm.invalid">
+            <i class="fa fa-check"></i>Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
