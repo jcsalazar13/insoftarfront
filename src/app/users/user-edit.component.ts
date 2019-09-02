@@ -100,9 +100,9 @@ export class UserEditComponent implements OnInit, AfterViewInit {
             this.listForm.reset();
             this.goBack();
           }
-          this.errorMessage =
-            'Ocurrió un error al tratar de guardar los cambios en la base de datos. Contacte a su proveedor';
-        }, err => (this.errorMessage = err));
+        }, (errors: string[]) => {
+          errors.forEach(message => this.toastr.error(message));
+        });
       } else {
         this.user.id = this.id;
         this.userService.updateUser(this.user).subscribe(data => {
@@ -111,7 +111,6 @@ export class UserEditComponent implements OnInit, AfterViewInit {
             this.listForm.reset();
             this.goBack();
           }
-          this.errorMessage = data;
         }, (errors: string[]) => {
           errors.forEach(message => this.toastr.error(message));
         });
