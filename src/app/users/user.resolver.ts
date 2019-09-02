@@ -19,7 +19,7 @@ export class UserResolver implements Resolve<UserResolved> {
           this.router.navigate([''], { queryParams: { notFound: true } });
           return { user: null };
         }
-        return { user: user };
+        return { user };
       }),
       catchError(error => {
         const message = `Retrieval error: ${error}`;

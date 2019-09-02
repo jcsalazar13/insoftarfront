@@ -42,28 +42,27 @@ export class UserEditComponent implements OnInit, AfterViewInit {
   ) {
     this.validationMessages = {
       firstname: {
-        required: 'Firstname es obligatorio',
+        required: 'Firstname is required',
       },
       lastname: {
-        required: 'Lastname es obligatorio',
+        required: 'Lastname is required',
       },
       document: {
-        required: 'Document es obligatorio',
+        required: 'Document is required',
       },
       email: {
-        required: 'Correo electrónico es obligatorio',
-        email: 'Debe tener formato de correo',
+        required: 'Email is required',
+        email: 'Invalid formta email',
       },
       cemail: {
-        required: 'Confirmación de correo electrónico es obligatorio',
-        email: 'Debe tener formato de correo',
-        EmailValidator: 'Confirmación de correo no coincide',
+        required: 'Confirmation email is required',
+        email: 'Invalid format email',
+        EmailValidator: 'Confirmation email does not match',
       },
     };
     // Define an instance of the validator for use with this form,
     // passing in this form's set of validation messages.
     this.genericValidator = new GenericValidator(this.validationMessages);
-    this.toastr.success('Hello world!', 'Toastr fun!');
   }
 
   ngOnInit() {
@@ -73,18 +72,23 @@ export class UserEditComponent implements OnInit, AfterViewInit {
       if (resolvedDataUser.error) {
         this.errorMessage = this.errorMessage + resolvedDataUser.error;
       }
-      this.user = resolvedDataUser.user;
 
+      if(resolvedDataUser.user.data){
+        this.user = resolvedDataUser.user.data;
+      } else {
+        this.user = resolvedDataUser.user;
+      }
+
+      this.listForm = this.fb.group({
+        firstname: [this.user.firstname, [Validators.required]],
+        lastname: [this.user.lastname, [Validators.required]],
+        document: [this.user.document, [Validators.required]],
+        email: [this.user.email, [Validators.required, Validators.email]],
+        cemail: [this.user.email, [Validators.required, Validators.email, EmailValidator('email')]],
+        phone: [this.user.phone],
+      });
     });
 
-    this.listForm = this.fb.group({
-      firstname: [this.user.firstname, [Validators.required]],
-      lastname: [this.user.lastname, [Validators.required]],
-      document: [this.user.document, [Validators.required]],
-      email: [this.user.email, [Validators.required, Validators.email]],
-      cemail: ['', [Validators.required, Validators.email, EmailValidator('email')]],
-      phone: [this.user.phone],
-    });
   }
 
   onSubmit(): void {
@@ -92,10 +96,7 @@ export class UserEditComponent implements OnInit, AfterViewInit {
       if (+this.id === 0) {
         this.userService.createUser(this.user).subscribe(success => {
           if (success) {
-            this.toastr.toastrConfig.disableTimeOut = true;
-            this.toastr.toastrConfig.closeButton = true;
-            this.toastr.toastrConfig.tapToDismiss = false;
-            this.toastr.success('La clave temporal del usuario es: ' + success, 'Success!');
+            this.toastr.success('User created success!');
             this.listForm.reset();
             this.goBack();
           }
@@ -104,23 +105,17 @@ export class UserEditComponent implements OnInit, AfterViewInit {
         }, err => (this.errorMessage = err));
       } else {
         this.user.id = this.id;
-        this.userService.updateUser(this.user).subscribe(success => {
-          if (success === true) {
+        this.userService.updateUser(this.user).subscribe(data => {
+          if (data.data) {
+            this.toastr.success(`User successfully updated`);
             this.listForm.reset();
             this.goBack();
           }
-          this.errorMessage =
-            'Ocurrió un error al tratar de guardar los cambios en la base de datos. Contacte a su proveedor';
-        }, err => (this.errorMessage = err));
+          this.errorMessage = data;
+        }, (errors: string[]) => {
+          errors.forEach(message => this.toastr.error(message));
+        });
       }
-  }
-
-  onDeleteConfirm(event) {
-    if (window.confirm('¿Seguro que quieres eliminar ' + event.data.item + '?')) {
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
-    }
   }
 
   goBack(): void {

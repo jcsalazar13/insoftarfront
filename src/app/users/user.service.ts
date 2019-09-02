@@ -41,11 +41,6 @@ export class UserService {
     };
 
     return this.http.get<any>(`${this.url}/${id}`, httpOptions).pipe(
-      map(responseData => {
-        return JSON.parse(
-          responseData.data
-        );
-      }),
       catchError(this.handleError)
     );
   }
@@ -58,7 +53,6 @@ export class UserService {
     };
 
     return this.http.post<any>(this.url, user, httpOptions).pipe(
-      map(responseData => JSON.parse(responseData.data)),
       catchError(this.handleError)
     );
   }
@@ -70,27 +64,25 @@ export class UserService {
       })
     };
 
-
     return this.http.put<any>(`${this.url}/${user.id}`, user, httpOptions).pipe(
-      map(responseData => JSON.parse(responseData.data)),
       catchError(this.handleError)
     );
   }
 
-  deleteUser(id: string): Observable<boolean | any> {
+  deleteUser(id: number): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
     return this.http.delete<any>(`${this.url}/${id}`, httpOptions).pipe(
-      map(responseData => JSON.parse(responseData.message)),
       catchError(this.handleError)
     );
   }
 
   private handleError(err: HttpErrorResponse) {
     let errorMessage = '';
+    let errors = [];
     if (err.error instanceof ErrorEvent) {
       // A client-side or network error ocurred. Handle it accordingly.
       errorMessage = `An error ocurred: ${err.error.message}`;
@@ -98,8 +90,9 @@ export class UserService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong.
       errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+      errors = Object.keys(err.error).map(key => err.error[key][0]);
     }
-    return throwError(errorMessage);
+    return throwError(errors);
   }
 
   private initializeUser(): User {

@@ -1,0 +1,25 @@
+:host /deep/ ng2-smart-table table{
+  border-style: inset;
+  border-color: initial;
+  border-image: initial;
+  border-width: 1px;
+
+  display: table;
+  border-spacing: 2px;
+  border-color: blueviolet; /* border of the big table*/
+}
+/* grid lines */
+:host /deep/ ng2-smart-table table > tbody > tr > td {
+  box-sizing: border-box;
+  border: 1px solid blueviolet;
+}
+
+/* headers grid color*/
+:host /deep/ ng2-smart-table thead > tr > th  {
+  border: 1px solid grey;
+  background-color:#ffff;
+}
+/*font size*/
+:host /deep/ ng2-smart-table {
+  font-size:16px;
+}

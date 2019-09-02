@@ -4,10 +4,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { UserService } from './user.service';
 import { User } from './user';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 /* Settings for smart-data-table */
 const SETTINGS = {
   columns: {
+    id: {
+      title: 'ID',
+      filter: true
+    },
     firstname: {
       title: 'Firstname',
       filter: true
@@ -30,11 +35,17 @@ const SETTINGS = {
     },
   },
   mode: 'external',
-  add: { addButtonContent: 'Add'},
+  add: { addButtonContent: 'Add User'},
   edit: { editButtonContent: 'Edit' },
   delete: { deleteButtonContent: 'Delete' },
   actions: { columnTitle: 'Actions', position: 'right' },
-  noDataMessage: 'There is no data'
+  noDataMessage: 'There is no data',
+  pager: {
+    perPage: 5
+  },
+  attr: {
+    class: 'table table-bordered'
+  }
 };
 
 @Component({
@@ -55,7 +66,8 @@ export class UserComponent implements OnInit {
     private modalService: NgbModal,
     private routerService: Router,
     private route: ActivatedRoute,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -75,19 +87,21 @@ export class UserComponent implements OnInit {
 
   }
 
-  open(content: any, user: any): void {
+  open(content: any, user?: any): void {
     this.selectedUser = user;
     this.modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       centered: true,
       keyboard: false,
-      backdrop: 'static'
+      backdrop: 'static',
+      size: 'lg'
     });
   }
 
   onDelete(): void {
-    this.userService.deleteUser(this.selectedUser.id).subscribe(success => {
-      if (success === true) {
+    this.userService.deleteUser(+this.selectedUser.id).subscribe(data => {
+      if (data) {
+        this.toastr.success(`User successfully deleted`);
         this.source.remove(this.selectedUser);
         this.modalRef.close();
       }

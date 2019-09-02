@@ -1,3 +1,4 @@
+<h1 align="center">Add/Edit User</h1>
 <div class="card">
   <div class="card-body">
     <form [formGroup]="listForm" (ngSubmit)="onSubmit()">
@@ -20,14 +21,14 @@
       <div class="row">
         <div class="col">
           <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.email }">
-            <label class="control-label">Correo electrónico</label>
+            <label class="control-label">Email</label>
             <input type="text" class="form-control" formControlName="email" required />
             <small class="form-control-feedback"> {{ displayMessage.email }} </small>
           </div>
         </div>
         <div class="col">
           <div class="form-group" [ngClass]="{ 'has-danger': displayMessage.cemail }">
-            <label class="control-label">Confirmación de correo electrónico</label>
+            <label class="control-label">Confirmation email</label>
             <input type="text" class="form-control" formControlName="cemail" required />
             <small class="form-control-feedback"> {{ displayMessage.cemail }} </small>
           </div>

@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './users/user.component';
-import { UserEditComponent } from './users';
-import { UsersResolver } from './users/users.resolver';
+import { UserEditComponent } from './users/user-edit.component';
+//import { UsersResolver } from './users/users.resolver';
 import { UserResolver } from './users/user.resolver';
 import { BrowserModule } from '@angular/platform-browser';
 
 
 const routes: Routes = [
-  { path: '',  component: UserComponent,  resolve: { usersResolved: UsersResolver }, pathMatch: 'full' },
-  { path: ':id/edit', component: UserEditComponent, resolve: { userResolved: UserResolver }},
+  { path: 'users/:id/edit', component: UserEditComponent, resolve: { userResolved: UserResolver }},
+  { path: 'users',  component: UserComponent},
+  //,  resolve: { usersResolved: UsersResolver }
+  { path: '',  component: UserComponent},
+  //,  resolve: { usersResolved: UsersResolver }
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
